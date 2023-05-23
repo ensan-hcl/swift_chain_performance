@@ -42,6 +42,18 @@ final class swift_chain_performanceTests: XCTestCase {
         }
     }
 
+    func testTake2ArrayPerformance() throws {
+        measure {
+            let a = Array(0 ..< 100)
+            let b = Array(100 ..< 200)
+            for _ in 0..<1000000 {
+                takeSequence(a)
+                takeSequence(b)
+            }
+        }
+    }
+    
+
     // MARK: test for 3 array chaining
     func testTake3ArrayAdditionPerformance() throws {
         measure {
@@ -61,6 +73,19 @@ final class swift_chain_performanceTests: XCTestCase {
             let c = Array(200 ..< 300)
             for _ in 0..<1000000 {
                 takeSequence(chain(chain(a, b), c))
+            }
+        }
+    }
+
+    func testTake3ArrayPerformance() throws {
+        measure {
+            let a = Array(0 ..< 100)
+            let b = Array(100 ..< 200)
+            let c = Array(200 ..< 300)
+            for _ in 0..<1000000 {
+                takeSequence(a)
+                takeSequence(b)
+                takeSequence(c)
             }
         }
     }
@@ -105,6 +130,21 @@ final class swift_chain_performanceTests: XCTestCase {
         }
     }
 
+    func testTake4ArrayPerformance() throws {
+        measure {
+            let a = Array(0 ..< 100)
+            let b = Array(100 ..< 200)
+            let c = Array(200 ..< 300)
+            let d = Array(300 ..< 400)
+            for _ in 0..<1000000 {
+                takeSequence(a)
+                takeSequence(b)
+                takeSequence(c)
+                takeSequence(d)
+            }
+        }
+    }
+
     // MARK: test for 5 array chaining
     func testTake5ArrayAdditionPerformance() throws {
         measure {
@@ -128,6 +168,23 @@ final class swift_chain_performanceTests: XCTestCase {
             let e = Array(400 ..< 500)
             for _ in 0..<1000000 {
                 takeSequence(chain(chain(chain(chain(a, b), c), d), e))
+            }
+        }
+    }
+
+    func testTake5ArrayPerformance() throws {
+        measure {
+            let a = Array(0 ..< 100)
+            let b = Array(100 ..< 200)
+            let c = Array(200 ..< 300)
+            let d = Array(300 ..< 400)
+            let e = Array(400 ..< 500)
+            for _ in 0..<1000000 {
+                takeSequence(a)
+                takeSequence(b)
+                takeSequence(c)
+                takeSequence(d)
+                takeSequence(e)
             }
         }
     }
