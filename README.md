@@ -64,3 +64,54 @@ Test Suite 'All tests' passed at 2022-12-29 21:50:33.512.
 	 Executed 10 tests, with 0 failures (0 unexpected) in 38.211 (38.214) seconds
 ```
 
+## Some performance study
+
+* The bottle-neck is `Chain2Sequence.Iterator.next()` (as expected)
+* Manually implementing `Chain3Sequence` or `Chain5Sequence` did not produce better performance compared to `Chain2Sequence`
+* Providing manual implementation of `forEach`, `map`, `reduce` and other methods produced better performance for them, because they less depend on `Chain2Sequence.Iterator.next()`
+  ```swift
+  // manual implementation of `forEach` for better performance
+  public extension Chain2Sequence {
+      @inlinable func forEach(_ body: (Self.Element) throws -> Void) rethrows {
+          for v in base1 {
+              try body(v)
+          }
+          for v in base2 {
+              try body(v)
+          }
+      }
+  }
+  ```
+* Manual implementation of `ChainNSequence` and those methods produced the best result (as expected)
+* Global variadic generic function like `chainForEach` will be the best solution, though variadic generics is currently not fully implemented and not usable.
+  ```swift
+  @inlinable
+  public func chainForEach<E>(_ s1: some Sequence<E>, _ s2: some Sequence<E>, _ s3: some Sequence<E>, _ s4: some Sequence<E>, _ s5: some Sequence<E>, body: (E) throws -> Void) rethrows {
+      for v in s1 {
+          try process(v)
+      }
+      for v in s2 {
+          try process(v)
+      }
+      for v in s3 {
+          try process(v)
+      }
+      for v in s4 {
+          try process(v)
+      }
+      for v in s5 {
+          try process(v)
+      }
+  }
+  
+  // and possibly with variadic generics
+  @inlinable
+  public func chainForEach<each S, E>(_ s: repeat each S, body: (E) throws -> Void) rethrows where repeat (each S).Element == E {
+      for s in repeat each s {
+          for v in s {
+              try process(v)
+          }
+      }
+  }  
+  ```
+
